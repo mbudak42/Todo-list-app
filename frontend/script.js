@@ -22,9 +22,8 @@ function yeni_gorev() {
 }
 
 
-function gorev_sil() {
-	// var gorev_id = 
-	fetch('http://127.0.0.1:5000/gorev_sil', {
+function gorev_sil(gorev_id) {
+	fetch('http://127.0.0.1:5000/gorevler/${gorev_id}', {
 		method: 'DELETE',
 		headers: {
 			'Content-Type': 'application/json'
@@ -37,9 +36,8 @@ function gorev_sil() {
 	listeyi_guncelle();
 }
 
-function gorev_guncelle() {
-	// var gorev_id =
-	fetch('http://127.0.0.1:5000/gorev_yapildi', {
+function gorev_guncelle(gorev_id) {
+	fetch('http://127.0.0.1:5000/gorevler/${gorev_id}', {
 		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json'
