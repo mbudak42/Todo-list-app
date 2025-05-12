@@ -23,12 +23,11 @@ function yeni_gorev() {
 
 
 function gorev_sil(gorev_id) {
-	fetch('http://127.0.0.1:5000/gorevler/${gorev_id}', {
+	fetch(`http://127.0.0.1:5000/gorevler/${gorev_id}`, {
 		method: 'DELETE',
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify({ gorev_id: gorev_id })
 	})
 		.catch(error => {
 			console.error('Sunucu hatasi:', error);
@@ -37,12 +36,11 @@ function gorev_sil(gorev_id) {
 }
 
 function gorev_guncelle(gorev_id) {
-	fetch('http://127.0.0.1:5000/gorevler/${gorev_id}', {
+	fetch(`http://127.0.0.1:5000/gorevler/${gorev_id}`, {
 		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify({ gorev_id: gorev_id })
 	})
 		.catch(error => {
 			console.error('Sunucu hatasi:', error);
