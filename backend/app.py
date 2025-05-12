@@ -7,7 +7,7 @@ CORS(app)  # Frontend farklı porttan erişebilsin diye
 # Geçici Görev Listemiz
 gorevler = []
 
-#Görev Ekle
+# Görev Ekle
 @app.route('/gorevler', methods=['POST'])
 def gorev_ekle():
     data = request.get_json()
@@ -22,3 +22,26 @@ def gorev_ekle():
 
     gorevler.append(gorev)
     return '', 204  # 204 = işlem başarılı ama içerik yok
+
+# Gorevleri Listele
+@app.route('/gorevler', methods=['GET'])
+def gorevleri_getir():
+    return jsonify(gorevler), 200
+
+# Gorev Guncelleme
+@app.route('/gorevler/<int:gorev_id>', methods=['PUT'])
+def gorev_guncelle(gorev_id):
+    for gorev in gorevler:
+        if gorev["gorev_id"] == gorev_id:
+            gorev["yapildi"] = not gorev["yapildi"]
+            return '', 204
+    return '', 404
+
+# Gorev Sil
+@app.route('/gorevler/<int:gorev_id>', methods=['DELETE'])
+def gorev_sil(gorev_id):
+    for gorev in gorevler:
+        if gorev["gorev_id"] == gorev_id:
+            gorevler.remove(gorev)
+            return '', 204
+    return '', 404
