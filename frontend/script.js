@@ -11,51 +11,81 @@ function yeni_gorev() {
 			},
 			body: JSON.stringify({ gorev_id: gorevID, gorev_icerigi: kullanici_input })
 		})
+			.then(() => {
+				gorevID++;
+				listeyi_guncelle();
+			})
 			.catch(error => {
 				console.error('Sunucu hatasi:', error);
 			});
 	}
-	gorevID++;
-	listeyi_guncelle();
 }
+
 
 function gorev_sil() {
-	//> pythona silinecek gorevi soyle
+	// var gorev_id = 
+	fetch('http://127.0.0.1:5000/gorev_sil', {
+		method: 'DELETE',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ gorev_id: gorev_id })
+	})
+		.catch(error => {
+			console.error('Sunucu hatasi:', error);
+		});
 	listeyi_guncelle();
 }
 
-function gorev_duzenle() {
-	//> pythona değiştirilecek gorevi ve yeni stringi ver
+function gorev_guncelle() {
+	// var gorev_id =
+	fetch('http://127.0.0.1:5000/gorev_yapildi', {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ gorev_id: gorev_id })
+	})
+		.catch(error => {
+			console.error('Sunucu hatasi:', error);
+		});
 	listeyi_guncelle();
 }
 
 function listeyi_guncelle() {
-	//> pythondan tum listeyi al bastanyaz
-	let yeniSatir = document.createElement("div");
+	fetch('http://127.0.0.1:5000/gorevler')
+		.then(response => response.json())
+		.then(data => {
+			const liste = document.getElementById("list");
+			liste.innerHTML = "";  // Listeyi temizle
 
-	let checkbox = document.createElement("input");
-	checkbox.type = "checkbox";
-	checkbox.name = "yapilacaklar";
-	checkbox.value = gorevSayisi;
+			data.forEach(gorev => {
+				let yeniSatir = document.createElement("div");
 
-	// Görev metni oluşturuluyor
-	let gorevMetni = document.createElement("span");
-	gorevMetni.textContent = kullanici_input;
+				let checkbox = document.createElement("input");
+				checkbox.type = "checkbox";
+				checkbox.checked = gorev.yapildi;
+				checkbox.onchange = function () {
+					gorev_guncelle(gorev.gorev_id);
+				};
 
-	// Düzenleme butonu oluşturuluyor
-	let duzenleButonu = document.createElement("button");
-	duzenleButonu.textContent = "duzenle";
-	duzenleButonu.onclick = function () { gorev_duzenle(gorevSayisi, gorevMetni); };
+				let gorevMetni = document.createElement("span");
+				gorevMetni.textContent = gorev.gorev_icerigi;
+				if (gorev.yapildi) {
+					gorevMetni.style.textDecoration = "line-through";
+				}
 
-	// Silme butonu oluşturuluyor
-	let silButonu = document.createElement("button");
-	silButonu.textContent = "sil";
-	silButonu.onclick = function () { gorev_sil(gorevSayisi, yeniSatir); };
+				let silButonu = document.createElement("button");
+				silButonu.textContent = "Sil";
+				silButonu.onclick = function () {
+					gorev_sil(gorev.gorev_id);
+				};
 
-	// Yeni satırdaki öğeleri ekliyoruz
-	yeniSatir.appendChild(checkbox);
-	yeniSatir.appendChild(gorevMetni);
-	yeniSatir.appendChild(duzenleButonu);
-	yeniSatir.appendChild(silButonu);
-	document.getElementById("list").appendChild(yeniSatir);
+				yeniSatir.appendChild(checkbox);
+				yeniSatir.appendChild(gorevMetni);
+				yeniSatir.appendChild(silButonu);
+
+				liste.appendChild(yeniSatir);
+			});
+		});
 }
