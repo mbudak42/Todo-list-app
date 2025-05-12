@@ -45,3 +45,21 @@ def gorev_sil(gorev_id):
             gorevler.remove(gorev)
             return '', 204
     return '', 404
+
+# Tamamlananlari Sil
+@app.route('/gorevler/tamamlananlar', methods=['DELETE'])
+def tamamlananlari_sil():
+    global gorevler  # Çünkü listeyi yeniden tanımlayacağız
+
+    yeni_gorevler = []  # Yeni bir boş liste oluştur
+
+    for gorev in gorevler:  # Eski listedeki her görevi dolaş
+        if not gorev["yapildi"]:  # Eğer görev yapılmamışsa (yapildi == False)
+            yeni_gorevler.append(gorev)  # Yeni listeye ekle
+
+    gorevler = yeni_gorevler  # Eski listeyi yeni listeyle değiştir
+    return '', 204
+
+# Baslat
+if __name__ == '__main__':
+    app.run(debug=True)
