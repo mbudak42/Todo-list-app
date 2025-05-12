@@ -1,7 +1,7 @@
 let gorevID = 1;
 
 function yeni_gorev() {
-	var kullanici_input = prompt("Lütfen bir şeyler yazın:");
+	var kullanici_input = prompt("Enter Task:");
 
 	if (kullanici_input != null && kullanici_input !== "") {
 		fetch('http://127.0.0.1:5000/gorevler', {
@@ -29,24 +29,21 @@ function gorev_sil(gorev_id) {
 			'Content-Type': 'application/json'
 		},
 	})
+	.then(() => listeyi_guncelle())
 		.catch(error => {
 			console.error('Sunucu hatasi:', error);
 		});
-	listeyi_guncelle();
 }
 
 function gorev_guncelle(gorev_id) {
 	fetch(`http://127.0.0.1:5000/gorevler/${gorev_id}`, {
 		method: 'PUT',
-		headers: {
-			'Content-Type': 'application/json'
-		},
+		headers: { 'Content-Type': 'application/json' }
 	})
-		.catch(error => {
-			console.error('Sunucu hatasi:', error);
-		});
-	listeyi_guncelle();
+		.then(() => listeyi_guncelle())
+		.catch(error => console.error('Sunucu hatasi:', error));
 }
+
 
 function listeyi_guncelle() {
 	fetch('http://127.0.0.1:5000/gorevler')
@@ -84,4 +81,13 @@ function listeyi_guncelle() {
 				liste.appendChild(yeniSatir);
 			});
 		});
+}
+
+
+function tamamlananlari_sil() {
+	fetch('http://127.0.0.1:5000/gorevler/tamamlananlar', {
+		method: 'DELETE'
+	})
+		.then(() => listeyi_guncelle())
+		.catch(error => console.error('Sunucu hatasi:', error));
 }
