@@ -6,14 +6,14 @@ import os
 app = Flask(__name__)
 CORS(app)  # Frontend farklı porttan erişebilsin diye
 
-# 🔁 Görevleri dosyadan yükle
+# Görevleri dosyadan yükle
 def gorevleri_yukle():
     if os.path.exists("gorevler.json"):
         with open("gorevler.json", "r", encoding="utf-8") as f:
             return json.load(f)
     return []
 
-# 💾 Görevleri dosyaya kaydet
+# Görevleri dosyaya kaydet
 def gorevleri_kaydet():
     with open("gorevler.json", "w", encoding="utf-8") as f:
         json.dump(gorevler, f, indent=2, ensure_ascii=False)
@@ -25,8 +25,10 @@ gorevler = gorevleri_yukle()
 @app.route('/gorevler', methods=['POST'])
 def gorev_ekle():
     data = request.get_json()
-    gorev_id = data.get("gorev_id")
     gorev_icerigi = data.get("gorev_icerigi")
+    
+    en_son_id = max([g["gorev_id"] for g in gorevler], default=0)
+    gorev_id = en_son_id + 1
 
     gorev = {
         "gorev_id": gorev_id,
