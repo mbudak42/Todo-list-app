@@ -21,6 +21,9 @@ function yeni_gorev() {
 	}
 }
 
+window.onload = function() {
+	listeyi_guncelle();
+};
 
 function gorev_sil(gorev_id) {
 	fetch(`http://127.0.0.1:5000/gorevler/${gorev_id}`, {
