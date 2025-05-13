@@ -1,5 +1,3 @@
-let gorevID = 1;
-
 function yeni_gorev() {
 	var kullanici_input = prompt("Enter Task:");
 
@@ -9,10 +7,9 @@ function yeni_gorev() {
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({ gorev_id: gorevID, gorev_icerigi: kullanici_input })
+			body: JSON.stringify({ gorev_icerigi: kullanici_input })
 		})
 			.then(() => {
-				gorevID++;
 				listeyi_guncelle();
 			})
 			.catch(error => {
