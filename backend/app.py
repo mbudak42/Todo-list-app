@@ -4,17 +4,18 @@ import json
 import os
 
 app = Flask(__name__)
-CORS(app)  # Frontend farklı porttan erişebilsin diye
+CORS(app)
 
 # Görevleri dosyadan yükle
 def gorevleri_yukle():
-    if os.path.exists("gorevler.json"):
+    if os.path.exists("gorevler.json") and os.stat("gorevler.json").st_size != 0:
         with open("gorevler.json", "r", encoding="utf-8") as f:
             return json.load(f)
     return []
 
 # Görevleri dosyaya kaydet
 def gorevleri_kaydet():
+    print(gorevler)
     with open("gorevler.json", "w", encoding="utf-8") as f:
         json.dump(gorevler, f, indent=2, ensure_ascii=False)
 
@@ -37,8 +38,7 @@ def gorev_ekle():
     }
 
     gorevler.append(gorev)
-    gorevleri_kaydet()
-    return '', 204  # 204 = işlem başarılı ama içerik yok
+    return '', 204
 
 # Gorevleri Listele
 @app.route('/gorevler', methods=['GET'])
@@ -51,7 +51,6 @@ def gorev_guncelle(gorev_id):
     for gorev in gorevler:
         if gorev["gorev_id"] == gorev_id:
             gorev["yapildi"] = not gorev["yapildi"]
-            gorevleri_kaydet()	
             return '', 204
     return '', 404
 
@@ -61,22 +60,26 @@ def gorev_sil(gorev_id):
     for gorev in gorevler:
         if gorev["gorev_id"] == gorev_id:
             gorevler.remove(gorev)
-            gorevleri_kaydet()
             return '', 204
     return '', 404
 
 # Tamamlananlari Sil
 @app.route('/gorevler/tamamlananlar', methods=['DELETE'])
 def tamamlananlari_sil():
-    global gorevler  # Çünkü listeyi yeniden tanımlayacağız
+    global gorevler
 
-    yeni_gorevler = []  # Yeni bir boş liste oluştur
+    yeni_gorevler = []
 
-    for gorev in gorevler:  # Eski listedeki her görevi dolaş
-        if not gorev["yapildi"]:  # Eğer görev yapılmamışsa (yapildi == False)
-            yeni_gorevler.append(gorev)  # Yeni listeye ekle
+    for gorev in gorevler:
+        if not gorev["yapildi"]:
+            yeni_gorevler.append(gorev)
 
-    gorevler = yeni_gorevler  # Eski listeyi yeni listeyle değiştir
+    gorevler = yeni_gorevler
+    return '', 204
+
+# Kaydet
+@app.route('/gorevler/kaydet', methods = ['POST'])
+def gorevleri_kaydet():
     gorevleri_kaydet()
     return '', 204
 
