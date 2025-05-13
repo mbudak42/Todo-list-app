@@ -79,7 +79,7 @@ def tamamlananlari_sil():
 
 # Kaydet
 @app.route('/gorevler/kaydet', methods = ['POST'])
-def gorevleri_kaydet():
+def gorevleri_dosyaya_kaydet():
     gorevleri_kaydet()
     return '', 204
 
