@@ -18,10 +18,6 @@ function yeni_gorev() {
 	}
 }
 
-window.onload = function() {
-	listeyi_guncelle();
-};
-
 function gorev_sil(gorev_id) {
 	fetch(`http://127.0.0.1:5000/gorevler/${gorev_id}`, {
 		method: 'DELETE',
@@ -29,7 +25,7 @@ function gorev_sil(gorev_id) {
 			'Content-Type': 'application/json'
 		},
 	})
-	.then(() => listeyi_guncelle())
+		.then(() => listeyi_guncelle())
 		.catch(error => {
 			console.error('Sunucu hatasi:', error);
 		});
@@ -43,7 +39,6 @@ function gorev_guncelle(gorev_id) {
 		.then(() => listeyi_guncelle())
 		.catch(error => console.error('Sunucu hatasi:', error));
 }
-
 
 function listeyi_guncelle() {
 	fetch('http://127.0.0.1:5000/gorevler')
@@ -83,11 +78,26 @@ function listeyi_guncelle() {
 		});
 }
 
-
 function tamamlananlari_sil() {
 	fetch('http://127.0.0.1:5000/gorevler/tamamlananlar', {
 		method: 'DELETE'
 	})
 		.then(() => listeyi_guncelle())
 		.catch(error => console.error('Sunucu hatasi:', error));
+
 }
+
+function listeyi_kaydet() {
+	fetch('http://127.0.0.1:5000/gorevler/kaydet', {
+		method: 'POST'
+	})
+		.catch(error => console.error('Sunucu hatasi:', error));
+}
+
+window.onload = function () {
+	listeyi_guncelle();
+};
+
+window.onbeforeunload = function () {
+	listeyi_kaydet();
+};
